@@ -1,0 +1,14 @@
+CLK_DEBIT = 24 #for debit encoder
+DT_DEBIT = 25 #for volume encoder
+
+CLK_VOLUME = 22
+DT_VOLUME = 23
+
+GPIO_ALIM = 3
+GPIO_CANCEL = 1
+GPIO_PLAY = 2
+GPIO_BACK_BUTTON = 4
+GPIO_FORWARD_BUTTON = 5
+GPIO_CAPTURE = 6
+
+ 

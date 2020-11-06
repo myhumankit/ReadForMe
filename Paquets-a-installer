@@ -1,0 +1,5 @@
+pip install numpy
+pip install Scipy
+sudo apt-get install orca tesseract-ocr-all libtesseract4 python3-pyocr python-pyocr python3-tesseocr scikit-python cython xdotoll espeak espeak-ng
+python -m pip install -U scikit-image
+pip install --upgrade imutils

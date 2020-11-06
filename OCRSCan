@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Licence : GPL v3
+# Fonction : READ FOR ME - Machine à lire
+# 
+# Shell : bash, python3
+#
+
+# Fonctions :
+
+stopmbrola(){
+ if [ -n "$(ps -A | grep mbrola)" ] ; then
+        killall -KILL mbrola && sleep 2
+ fi
+
+}
+
+
+notify(){
+ #stopmbrola
+  espeak-ng -v fr  "$1"
+ sleep "$2"
+
+}
+########## Création espace de travail ###########
+
+if [ -d $HOME/document-scanner/images/ ] ; then
+    rm -rf "$HOME/document-scanner/images/"
+fi
+mkdir $HOME/document-scanner/images/
+
+######### Initialisation #########
+#xdotool key Insert+s
+
+scr=0
+
+notify "Machine à lire prête à être utilisée" 5
+notify "Pour démarrer, appuyer sur la touche capture" 5
+
+
+######### Acquisition image #########
+
+cd $HOME/document-scanner/
+notify "Acquisition du document" 5
+sudo python Acquisition_scan.py
+python scan_main.py --image images/img.jpg
+notify "Acquisition terminée" 5
+
+
+############# OCRScan ###############
+
+notify "Reconnaissance optique du document et lecture" 2
+cd $HOME/document-scanner/images/
+
+(echo "0" ; tesseract ./img.png sortie -l fra+eng+deu+ita+spa --psm 1 ; echo "100") #| while [ "$(ps aux | grep -i "tesseract" | grep -v "grep" | wc -l)" = "0" ]; do aplay $HOME/document-scanner/beep.wav ; sleep 2 ; done
+
+############ Lecture document ###########
+
+    notify "Lecture du document" 2
+if [ -f $HOME/document-scanner/images/sortie.txt ] ; then
+    orca --replace &
+    scr=1
+    sleep 5
+    mousepad $HOME/document-scanner/images/sortie.txt &
+    sleep 5
+    xdotool key KP_ADD
+  else
+    notify "Aucun document à lire" 2
+fi
+exit 0
