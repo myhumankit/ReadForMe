@@ -21,7 +21,7 @@ def cancel_event():
         run(['sudo','killall','orca'])
         #run(['sudo','killall','zenity'])
         #run(['sudo','killall','aplay'])
-   
+
 def back_event():
     print("back button pressed")
     send_shortcut("KP_Down")
@@ -29,7 +29,7 @@ def back_event():
 def forward_event():
     print("forward button pressed")
     send_shortcut("KP_Up")
-    
+
 def capture_event():
     global cur_process
     print("capture button pressed")
@@ -38,7 +38,7 @@ def capture_event():
     #send_shortcut('Insert+s')
     #time.sleep(0.3)
     cur_process = Popen(['./OCRSCan'])
-    
+
 def play_event():
     global is_play
     print("play/pause button pressed")
