@@ -1,0 +1,709 @@
+<div class="toclimit-2" style="max-width:700px">
+
+==Présentation du projet==
+
+===Description===
+
+Le but est de créer une machine à lire capable d’acquérir le texte à partir d'une capture d'image et de le lire au moyen d’une synthèse vocale.
+
+===Équipe===
+
+* François, ArianeGroup, porteur de projet
+* Lucie, MHK, coordination
+* Leyla, ArianeGroup
+* Aldrick, ArianeGroup
+* Evan, stagiaire MHK, étudiant Epitech
+* Baptiste, IMT
+* Célia, designer
+* Théo, fabmanager Eesab
+* Laurent, Floss Manuals, documentation
+
+[[File:rfm_equipe0.JPG|700px|Photo: L'équipe autour de la table]]
+
+[[File:rfm_equipe1.JPG|700px|Photo: L'équipe concentrée sur une démonstration de Christophe]]
+
+===Résumé===
+
+Le Fabrikarium a permis d'avancer sur de nombreux aspects mais nous n'avons pas eu le temps de recoller les briques ensemble afin de disposer d'un prototype complètement fonctionnel :
+
+* Christophe a fait fonctionné sa machine à lire sur un raspberry pi en ajoutant la prise en charge de la prise de vue avec une caméra et de l'autofocus.
+* Aldrick et Evan ont développé toute l'interface logicielle et électronique pour le contrôleur de la machine à lire : gestion des boutons poussoirs et encodeurs rotatifs d'une part et action pour la prise de vue et le déclenchement des raccourcis clavier nécessaires au contrôle de la lecture d'autre part.
+* Baptiste a ajouté la lecture en français et perfectionné l'expérience utilisateur d'un prototype existant basé sur PiTextReader.
+* Lucie, Lydia, Théo et Célia ont développé un nouveau prototype en soignant le design de la machine et l'interface du contrôleur pour des personnes mal-voyantes.
+
+===Plan de la page===
+
+Cette documentation détaille les avancées réalisées sur chacun des points ainsi qu'un tutoriel de réalisation du prototype.
+
+La section 2 suivant cette introduction présente le cahier des charges du projet.
+
+La section 3 présente l'analyse de l'existant: les machines commerciales ou les prototypes existant, ainsi que les solutions logicielles nécessaires pour réaliser la machine.
+
+La section 4 détaille la production du Fabrikarium pour ce projet pour permettre à des personnes de le reprendre et de l'améliorer.
+
+Les sections 5, 6 et 7 sont des ressources permettant de réaliser le prototype tel qu'il a été développé pendant le Fabrikarium, bien que le résultat final ne soit pas complètement fonctionnel.
+
+La section 8 présente les pistes d'amélioration possible.
+
+==Cahier des charges==
+
+===Fonctionnalités principales===
+
+* Lecture audio sur un haut parleur
+* Lecture d'une page A4 multicolonnne en langue française
+
+===Fonctionnalités secondaires===
+
+* réglage du débit / de la vitesse de lecture
+* réglage du volume sonore
+* éclairage
+* possibilité de mettre en pause
+* bouton de mise en marche et de mise à l'arrêt
+* prise de vue autofocus
+
+===Les contraintes===
+
+
+* '''Fonctionnement hors ligne''' : fonctionnement hors ligne ne nécessitant pas de connexion internet
+* '''Portable''' : fonctionnement sur batterie
+* '''Facile à prendre en main''' : ne nécessite pas ou très peu de formation
+* '''Rapidité''' : 10 secondes d'attente maximum
+
+
+==Analyse de l'existant==
+
+
+Des solutions performantes existent déjà pour smartphone, par exemple l'application [https://www.microsoft.com/en-us/ai/seeing-ai seeing-ai de Microsoft]. Elles ne sont cependant pas satisfaisantes dans tous les cas, en effet :
+
+* Tout le monde ne dispose pas d'un smartphone ou ne souhaite pas en disposer car ils peuvent être difficiles à prendre en main, notamment pour des personnes agées ou déficientes mentales et ce d'autant plus si celles-ci sont mal-voyants.
+* Leur usage n'est pas forcément adapté dans le cadre d'école ou de centre d'accueil.
+* Les services utilisés ne fonctionne généralement pas hors ligne et cela pose question par rapport au respect de la vie privée et à la divulgation possible d'informations sensibles ou confidentielles sur les serveurs des entreprises qui fournissent ces solutions.
+
+
+===Solutions commerciales===
+
+
+Il semble d'autant plus pertinent de développer une solution "tout en 1" que ce genre de dispositifs est effectivement disponible dans le commerce, à des prix qui peuvent cependant paraître relativement élevés (à partir de 1000€ sur le site [https://www.mieux-voir.fr/107-machine-a-lire www.mieux-voir.fr])
+
+
+[[File:rfm_blaze.jpg|300px|Photo: Solution commerciale blaze]][[File:rfm_vocatex.jpg|300px|Photo: Solution commerciale vocatex]]
+
+
+===Projets DIY existant===
+
+
+'''Machine à lire AccessDVLinux'''
+
+AccessDVLinux est une distribution linux pour déficients visuels maintenue par Christophe. Dans ce cadre, Christophe a également dévellopé un logiciel de machine à lire : [https://accessdvlinux.fr/-11-machine-a-lire-].
+
+Ce logiciel fonctionne sur un ordinateur portable ou de bureau à l'aide d'un scanner.
+
+Pour répondre à notre cahier des charges, certaines adaptations sont nécessaires :
+* Le logiciel doit pouvoir fonctionner à partir d'une caméra à la place du scanner.
+* Il doit pouvoir fonctionner sans environnement de bureau, c'est à dire sans écran et sans interaction avec la souris et le clavier.
+* Le contrôle de la prise de vue et de la lecture doit se faire à partir de boutons "physiques"
+* Il faut pouvoir installer tous les composants logiciels sur un raspberry pi, ce qui n'est pas évident car celui ci n'a sur la même base matériel qu'un ordinateur de bureau ou qu'un ordinateur portable (en particulier son processeur basé sur l'architecture ARM)
+
+
+'''Machine à lire sur Raspberry Pi'''
+
+En amont du Fabrikarium, Lucie et Delphine de MHK ont produit un prototype de machine à lire à partir du projet documenté sur la plateforme Instructables [https://www.instructables.com/PiTextReader-an-Easy-to-Use-Document-Reader-for-Im/ PiTextReader]. 
+
+Ce prototype (documenté sur ce wiki : [[Projets:Machine_a_lire_Mémo]]) est fonctionnel mais la partie synthèse vocale ne fonctionne que pour l'anglais.
+
+
+[[File:rfm_proto_circuit.jpg|340px|Photo: circuit du prototype "PiTextReader"]]  [[File:rfm_pitextreader.JPG|340px|Photo: prototype en carton "PiTextReader"]]
+
+
+Durant le Fabrikarium, une partie de l'équipe va travailler à faire fonctionner la lecture en français et améliorer l'expérience utilisateur de ce prototype.
+
+
+===Solutions logicielles===
+
+
+Au niveau logiciel, en plus de la gestion de l'interface utilisateur, la machine à lire consiste à faire fonctionner successivement deux processus :
+* la transformation de l'image en texte, qu'on appelle l'OCRisation,
+* la transformation du texte en son : la synthèse vocale.
+
+Pour l'OCRisation, toutes les solutions mentionnées plus haut utilisent le logiciel 'tesseract' disponible sous linux et notamment sur raspbian (pour le raspberry pi).
+
+La question est plus délicate pour la partie synthèse vocale, pour laquelle de nombreuses solutions existent à différents niveaux d'intégration : depuis le lecteur d'écran Orca jusqu'aux briques logicielles plus élémentaires (qu'orca utilise en partie) : speech-dispatcher, espeak, mbrola.
+
+Chacune de ses briques a en effet un rôle particulier pour la réalisation de la synthèse vocale.
+
+Orca gère l'entièreté du processus, mais n'est malheureusement pas simple à contrôler sans un clavier. En tant que lecteur d'écran, il est fait pour être utilisé avec des applications de bureau et non de manière embarquée dans un dispositif sans écran/souris/clavier.
+
+
+==Déroulement du fabrikarium==
+
+
+===Prototypage d'une version portable===
+
+
+Le premier jour du fabrikarium, alors que les contraintes techniques par rapport au cahier des charges esperé n'étaient pas encore bien connues, l'équipe de designeur·euse·s s'affaire à prototyper une version portable. Il s'agit de prendre en compte l'encombrement des différents composants (batterie, raspberry pi) dans la conception d'un boîtier, et de réfléchir à l'interface de commande, c'est-à-dire les boutons nécessaires et leur disposition sur le boîtier.
+
+Cela se fait d'abord par le dessin puis la réalisation d'un prototype en carton.
+
+[[File:rfm_proto_carton1.JPG|700px|Photo: design d'interface pour la version portable]]  
+
+[[File:rfm_proto_carton_test.JPG|700px|Photo: François teste un prototype en carton]]
+''Photo: François teste un prototype en carton''
+
+
+
+Dès le lendemain cependant, on se rend compte qu'il sera compliqué de faire un boitier portable pour l'instant. En effet la mise au point de la caméra et le redressement de l'image ne sont pas encore fonctionnels sur raspberry pi. La detection du texte ou d'une feuille de papier n'est pas simple non plus et nous ne trouvons aucun projet fonctionnel et documenté à ce sujet.
+
+On repart donc sur une version fixe, à l'image du prototype <tt>PiTextReader</tt>.
+
+===Nouveau prototype de boîtier et d'interface de commande===
+
+À partir de ces nouvelles contraintes, les designeur·euse·s décident de partir sur un boitier pliable qui aurait la forme d'un livre et pourrait donc se loger dans une bibliothèque.
+
+L'animation ci-dessous montre le principe du pliage/dépliage de l'appareil.
+
+[[File:rfm_anim_1.gif|350px|Animation: Dépliage de l'appareil]][[File:rfm_anim_2.gif|350px|Animation: Zoom sur l'articulation]]
+
+
+'''Conception des boutons'''
+
+Le design joue un rôle important pour les dispositifs utilisés par des personnes mal-voyantes.
+
+Le principe choisi pour l'interface utilisateur consiste à utiliser un bouton par fonction, celle-ci étant identifiable à partir d'une pictogramme en relief sur chaque bouton.
+
+
+[[File:rfm_boutons.png|700px|Image: Rendu de la modélisation des boutons]]
+
+
+[[File:rfm_boitier_boutons.JPG|700px|Photo: Les boutons sur le boitier]]
+
+
+===Développements logiciels à partir de la machine à lire AccessDVLinux===
+
+Les sources logicielles sont disponibles sur un dépot git hébergé sur le compte github de MHK : [https://github.com/myhumankit/ReadForMe ReadForMe]
+
+
+'''Principe de fonctionnement'''
+
+Le script principal est le script python <tt>Main.py</tt> qui permet de faire l'interface entre les commandes connectées au <tt>raspberry pi</tt>, le script d'aquisition <tt>OCRSCan</tt> et le lecteur d'écran <tt>Orca</tt>.
+
+
+[[File:rfm_principe.png|700px|Schéma: Schéma de principe du dispositif]]
+''Schéma: Schéma de principe du dispositif''
+
+[[:File:RFM_principe_export.svg]]
+
+
+'''Main.py'''
+
+<tt>Main.py</tt> fait appel à plusieurs modules python dont les fonctionnalités sont :
+
+* '''<tt>constantes.py</tt>''' : définition des ports GPIO utilisés pour les boutons et les encodeurs
+* '''<tt>buttons.py</tt>''' : définition des actions des boutons poussoirs
+* '''<tt>encoder.py</tt>''' : définition de l'objet <tt>RotatyEncoder</tt> permettant de lire les encodeurs et définition des actions des encodeurs rotatifs
+* '''<tt>send_shortcuts.py</tt>''' : émulation des raccourcis clavier (avec <tt>xdotool</tt>) permettant de contrôler <tt>orca</tt>
+
+
+'''Gestion de l'alimentation'''
+<span style="color:#FFFFFF; background:#00C000; padding:5px"> Testé et fonctionnel</span>
+
+Les Raspberry Pi n'ont pas de bouton pour les allumer et les éteindre. Il faut donc le définir nous même à partir des GPIO. La broche GPIO 3 permet de démarrer le raspberry pi quand elle est reliée à la masse.
+
+Le bouton poussoir relié à cette broche a donc deux effets :
+* démarrer le raspberry pi lorsqu'il est éteint en utilisant le fait que cette broche est déjà programmé pour réaliser cette action
+* éteindre le raspberry pi (c'est à dire arréter proprement le système d'exploitation <tt>raspbian</tt>) à l'aide d'une action définie en python et exécutée à l'aide du module <tt>subprocess</tt>
+
+
+'''Gestion des boutons'''
+<span style="color:#FFFFFF; background:#00C000; padding:5px"> Testé et fonctionnel</span>
+
+La lecture de l'état des boutons et l'exécution des actions qui leur sont liées sont gérées avec la bibliothèque <tt>gpiozero</tt>. Celle-ci permet en particulier de gérer le processus à l'aide d'événements non bloquants, dont la programmation est détaillée ci-après en prenant l'exemple du bouton d'alimentation.
+
+<pre>
+from gpiozero import Button
+from subprocess import run
+
+# définition des actions à effectuer (= événement, dans buttons.py)
+def alim_event():
+    print("alim button pressed")
+    run(['sudo','shutdown','now'])
+
+# définition des broches utilisées (dans constantes.py)
+GPIO_ALIM = 3
+
+# liaison entre le bouton et l'action (dans Main.py)
+button_alim = Button(GPIO_ALIM)
+button_alim.when_pressed = alim_event
+</pre>
+
+
+'''Gestion des encodeurs rotatifs'''
+<span style="color:#FFFFFF; background:#00C000; padding:5px"> Testé et fonctionnel</span>
+
+L'objet <tt>RotatyEncoder</tt>, définit dans <tt>encoder.py</tt>, permet de la même manière de relier les encodeurs à un événement, qui est également défini sous forme de fonction qui prend cette fois-ci un argument qui permet de savoir si l'encodeur est tourné dans un sens ou dans l'autre.
+
+<pre>
+from encoder import RotaryEncoder
+from send_shortcuts import send_shortcut
+
+# événement attaché à l'encodeur (dans encoder.py)
+switch_debit = False
+
+def debit_event(val):
+    global switch_debit
+    switch_debit = not switch_debit
+    if switch_debit:
+        if val<0: # encodeur dans le sens inverse des aiguilles d'une montre
+            print("débit down")
+            send_shortcut('KP_Insert+Shift_L+KP_Page_Down')
+        else:     # encodeur dans le sens des aiguilles d'une montre
+            print("débit up")
+            send_shortcut('KP_Insert+Shift_L+KP_Page_Up')
+
+# définition des broches utilisées (dans constantes.py)
+CLK_DEBIT = 24 #for debit encoder
+DT_DEBIT = 25 #for volume encoder
+
+# liaison entre l'encodeur et l'action (dans Main.py)
+debit_encoder = RotaryEncoder(DT_DEBIT, CLK_DEBIT, True)
+debit_encoder.when_rotated = debit_event
+</pre>
+
+
+[[File:rfm_circuit_pi.JPG|700px|Prototypage du câblage des boutons sur breadboard]]
+''Photo: Prototypage du câblage des boutons sur breadboard''
+
+
+'''Action des raccourcis clavier sur <tt>orca</tt>'''
+<span style="color:#FFFFFF; background:#CC0000; padding:5px">Non testé</span>
+
+Le seul moyen de contrôler le lecter <tt>orca</tt> en direct est l'utilisation de raccourci clavier. Ceux-ci sont émulés à l'aide de l'utilitaire <tt>xdotool</tt>. C'est la méthode utilisée pour la version scanner d'<tt>OCRSCan</tt>.
+
+Si le déclenchement d'action du clavier à partir de python par l'intermédiaire d' <tt>xdotool</tt> semble fonctionnel, nous n'avons pas pu tester son intégration avec <tt>orca</tt> lors de la lecture du document. 
+
+
+'''Execution d'OCRSCan'''
+<span style="color:#FFFFFF; background:#FFA500; padding:5px">partiellement fonctionnel</span>
+
+Le bouton capture lance l'exécution l<tt>OCRSCan</tt>. Il s'agit d'un script bash qui va exécuter successivement les tâches suivantes (détaillee dans les parties suivantes):
+* arrêt de <tt>orca</tt>
+* prise de vue et traitement de l'image
+* "ocrisation"
+* lancement de <tt>orca</tt>
+* ouverture du fichier texte avec <tt>mousepad</tt>
+
+
+'''Prise de vue avec autofocus'''
+<span style="color:#FFFFFF; background:#00C000; padding:5px">Testé et fonctionnel</span>
+
+Avec l'objectif de pouvoir réaliser une version portable, l'utilisation d'une picamera avec un autofocus a été testé. Le script utilisé est issue de la documentation d'Arducam : [https://github.com/ArduCAM/RaspberryPi/tree/master/Motorized_Focus_Camera Motorized_Focus_Camera]. Il nécessite d'activer la communication i2c à l'aide du script fourni <tt>enable_i2c_vc.sh</tt>.
+
+Le script <tt>Aquisition_scan.py</tt> est un copier/coller du script [https://github.com/ArduCAM/RaspberryPi/blob/master/Motorized_Focus_Camera/Autofocus.py Autofocus.py] de l'exemple cité plus haut ou seul la destination de l'image obtenue est changée.
+
+
+'''Détection de la feuille et redressement de l'image'''
+<span style="color:#FFFFFF; background:#FFA500; padding:5px">partiellement fonctionnel</span>
+
+Le script <tt>scan_main.py</tt> sert à détecter une page dans la photo prise à l'étape précedante, puis à corriger la perpective pour remettre la page à plat. En effet, le logiciel d'OCR <tt>tesseract</tt> admet de léger défauts de perspective mais la tolérance peut être bien plus grande si l'on est capable de redresser la page avec d'autres outils en amont.
+
+Le script utilise du code issue du blog [https://www.pyimagesearch.com/2020/08/31/image-alignment-and-registration-with-opencv/ pyimagesearch]
+
+Malheureusement, il semble fonctionner dans des conditions assez précises qui ne permettent pas son utilisation "à mains levées" par une personne mal voyante. Il faut par exemple que les 4 coins de la pages soient bien cadrées, et il est relativement sensible à l'éclairage. 
+
+ 
+'''OCRisation avec tesseract'''
+<span style="color:#FFFFFF; background:#00C000; padding:5px">Testé et fonctionnel</span>
+
+
+===Amélioration du projet PiTextReader===
+
+En attendant que la solution basée sur le logiciel <tt>OCRScan</tt> soit fonctionnelle sur raspberry pi, Baptiste a repris le prototype basé sur <tt>PiTextReader</tt> en y ajoutant le français et une voix française <tt>mbrola</tt>. Ce prototype ne prend pas en charge l'autofocus et ne permet pas encore de gérer les paramètres de lecture (vitesse, volume, navigation dans le texte).
+
+La version modifiée du code de PiTextReader est disponible sur [https://github.com/myhumankit/PiTextReader un dépôt github de MHK].
+
+Toutes les configurations et modifications présentées plus bas sont intégrées sur le dépôts, dans le script d'installation <tt>install.sh</tt> et dans le scrip python <tt>pitextreader.py</tt>.
+
+
+'''Synthèse vocale en français'''
+
+La version originale de 'PiTextReader' utilise le logiciel <tt>flite</tt> comme moteur de synthèse vocale, or celui-ci ne fonctionne pas avec le français.
+
+Pour le français, nous utilisons deux logiciels, <tt>spd-say</tt> qui est fourni avec le paquet <tt>speech-dispatcher</tt>, et <tt>espeak-ng</tt>. Ils sont disponibles dans les dépots <tt>raspbian</tt> :
+
+<pre>
+sudo apt-get install speech-dispatcher espeak-ng
+</pre>
+
+
+L'installation de <tt>mbrola</tt> se fait à partir d'un paquet debian qui n'est pas celui des dépots par défaut du raspberry pi. Pour l'installer :
+
+<pre>
+wget http://steinerdatenbank.de/software/mbrola3.0.1h_armhf.deb
+sudo dpkg -i mbrola3.0.1h_armhf.deb
+</pre>
+
+Les voix françaises sont bien installable depuis les dépots <tt>raspbian</tt> :
+
+<pre>
+sudo apt-get install mbrola-fr1
+</pre>
+
+On peut utiliser une des voix française mbrola (par exemple <tt>fr4</tt>) avec <tt>espeak</tt> :
+
+<pre>
+espeak-ng -v mb/mb-fr4 "Test d'un texte à lire en français"
+</pre>
+
+
+'''Ajout d'un ruban led'''
+
+Afin d'avoir une luminosité suffisante lors de la prise de photo, des rubans leds RVB addressables ont été ajouté. Pour les contrôler, nous utilisons la librairie python <tt>rpi_ws281x</tt>. Pour l'installer :
+
+<pre>
+sudo pip install rpi_ws281x
+</pre>
+
+L'utilisation de leds addessables nécessite de lancer le script python en tant qu'utilisateur root. Cela fonctionnait bien sur le raspberry pi 2 utilisé lors du Fabrikarium, mais pas avec le raspberry pi 4 utilisé après coup pour rédiger la documentation. Le ruban led a donc été desactivé dans la version de <tt>PiTextReader</tt>.
+
+
+==Matériel nécessaire et coût==
+
+===Electronique===
+
+
+{| class="wikitable" border="1"
+|-
+!scope="col"| Référence
+!scope="col"| coût unitaire
+!scope="col"| nombre
+!scope="col"| coût
+!scope="col"| liens
+|-
+| Raspberry pi 4
+| 60€
+| 1
+| 60€
+| [https://www.gotronic.fr/art-carte-raspberry-pi-4-b-2-gb-30349.htm 1]
+|-
+| Carte microSD 16Go
+| 10€
+| 1
+| 10€
+| 
+|-
+| Arducam
+| 18,90€
+| 1
+| 18,90€
+| [https://www.gotronic.fr/art-module-camera-5-mpx-autofocus-b0176-31619.htm 1]
+|-
+| Ampli audio mono
+| 14,90€
+| 1
+| 14,90€
+| [https://www.gotronic.fr/art-module-ampli-audio-gravity-dfr0064-19310.htm 1] [https://wiki.dfrobot.com/386AMP_audio_amplifier_Module__SKU__DFR0064_ doc]
+|-
+| Haut parleur 80mm 5W 4ohms
+| 10,00€
+| 1
+| 10,00€
+|
+|-
+| Batterie portable USB 2 ports
+| 20€
+| 1
+| 20€
+|
+|-
+| Encodeurs rotatifs
+| 5€
+| 2
+| 10€
+|
+|-
+| Boutons poussoirs
+| 0.5€
+| 6
+| 3€
+|
+|-
+| Ruban led 2 x 8cm
+| 5€
+| 1
+| 5€
+|
+|-
+| Prise jack 3.5mm mono
+| 1€
+| 1
+| 1€
+|
+|-
+| Mini câble USB-A/USB-C
+| 2€
+| 1
+| 2€
+|
+|}
+
+* 15 cm de câble blindé 2 brins pour relier le haut parleur
+* 10 cm de cable audio mono pour la prise jack
+* Un bout de cable USB type A mâle pour l'alimentation du module d'amplification
+* connecteur JST ou Dupont 2 broches femelles x1 (alimention ampli)
+* connecteur Dupont 2 broches femelle ou RCA x1 (connexion audio ampli) 
+
+===Fabrication du boitier===
+
+'''Matériaux'''
+
+* contreplaqué 5mm
+* fil PLA impression 3d
+* PMMA diffusant ou transparent
+
+coût estimé: 20€
+
+'''Quincaillerie'''
+
+* vis M3 16mm + écrous (x12)
+* vis M5 12mm + écrous (x4)
+* colle en baton
+* papier aluminium
+
+coût estimé: 10€
+
+===Coût total estimé===
+
+{| class="wikitable" border="1"
+|-
+!scope="col"| 
+!scope="col"| coût
+|-
+| Composants électroniques
+| 154,80€ 
+|-
+| Matériaux
+| 20€
+|-
+| Quincaillerie
+| 10€
+|-
+| '''Total'''
+| '''184,80€'''
+|}
+
+
+===Outils nécessaires===
+
+'''Électronique'''
+
+* Fer à souder
+
+'''Fabrication'''
+
+* Découpeuse laser
+* Imprimante 3d
+* Pistolet à colle
+
+
+===Délai estimé===
+
+{| class="wikitable" border="1"
+|-
+!scope="col"| tâche 
+!scope="col"| temps (heures)
+|-
+| Installation et configuration raspberry pi
+| 2h
+|-
+| Cablage électronique
+| 3h
+|-
+| Fabrication et montage du boîtier
+| 2h
+|-
+| '''Total'''
+| '''7h'''
+|}
+
+==Fichiers source==
+
+
+==Étape de fabrication pas à pas==
+
+
+===Installation du raspberry pi===
+
+'''Installation et configuration du raspberry pi'''
+
+Nos développements sont fait sur une version récente de <tt>Raspbian</tt>. L'installation de <tt>Raspbian</tt> est déjà largement documentée par ailleurs (par exemple sur ce wiki : [[Ressources:Raspberry_pi]])
+
+Les configurations spécifiques à cette installation sont les suivantes :
+* activation du module camera avec <code>raspi-config</code>
+* activer le son sur la prise jack (au lieu du HDMI) avec <code>raspi-config</code> ou alors depuis le bureau : pour qu'il sorte sur la sortie analogique de la raspi, clic droit sur icone speaker en haut à droite et choisir "Analog".
+
+'''Installation des dépendances logicielles'''
+
+Les scripts utilisés sont téléchargeable sous forme d'archive .zip depuis github sur [https://github.com/myhumankit/ReadForMe/archive/master.zip la page du projet] ou directement avec git :
+
+<pre>
+git clone https://github.com/myhumankit/ReadForMe.git
+</pre>
+
+Le dépot contient un script d'installation :
+
+<pre>
+cd ReadForMe
+sudo sh install.sh
+</pre>
+
+'''Démarrage automatique'''
+<span style="color:#FFFFFF; background:#FFA500; padding:5px">non testé</span>
+
+Le démarrage automatique fonctionne bien avec le prototype <tt>PiTextReader</tt> mais n'a pas été testé pour OCRScan.
+
+===Câblage===
+
+
+Le schéma suivant présente la manière dont les différents composants sont connectés au raspberry pi. Les boutons et encodeurs n'ont pas été intégrés dans le prototype final faute de temps.   
+
+
+[[File:rfm_circuit.png|700px|Schéma: Schéma de cablage]]
+''Schéma de cablage''
+
+'''Cablage de l'audio'''
+
+Le cablage du module d'amplification nécessite 3 câbles qui doivent être fabriqués ou modifiés :
+* Le cable d'alimentation est un cable USB dont une des extrémités a été coupé et remplacé par un connecteur dupont femelle à deux broches.
+* Le câble audio a une prise jack 3.5mm mono d'un côté et un connecteur dupont femelle a deux broches de l'autre côté.
+* Le câble du haut parleur est connecté avec un bornier à vis du côté de l'amplification et soudé au haut parleur.
+
+
+[[File:rfm_cablageampli.JPG|700px|Photo: Câblage de l'amplification]] 
+''Câblage de l'amplification''
+
+
+[[File:rfm_testampli.JPG|700px|Photo: Test du circuit d'amplification audio]]
+''Test du circuit d'amplification audio''
+
+
+'''Cablage des encodeurs et des boutons'''
+
+Le câblage final des encodeurs et des boutons n'a pas été réalisé pendant le Fabrikarium. On peut néanmoins proposer plusieurs solutions pour le réaliser :
+* l'utilisation d'un shield (ou hat) dédié (voir [https://www.amazon.fr/MakerHawk-Raspberry-Carte-dextension-multifonctionnelle/dp/B071ZC1HFF/ref=pd_lpo_147_t_0/257-7273133-1098412?_encoding=UTF8&pd_rd_i=B071ZC1HFF&pd_rd_r=5801e3d6-fad9-4ef7-a381-d379c4faf6ad&pd_rd_w=5EP8c&pd_rd_wg=fjHrI&pf_rd_p=a9e8383d-b25d-45ec-acc2-a094dd781c31&pf_rd_r=BKAK8MSQMMDXQMGS48WV&psc=1&refRID=BKAK8MSQMMDXQMGS48WV ici])
+* la fabrication d'un shield dédié à l'aide de stripboard
+* l'utilisation directe de connecteurs duponts sécurisés au pistolet à colle
+
+
+===Réalisation du boitier===
+
+Le boitier est fabriqué avec du contreplaqué de 3mm découpé au laser.
+
+
+[[File:rfm_decoupe.png|700px|Image: Plan de découpe du boitier]]
+
+
+L'assemblage se fait à partir de queue d'arrondes droites maintenues par des boulons.
+
+
+Une fois l'extérieur du boitier assemblé, on ajoute la couverture des ouvertures pour l'éclairage, qui sont deux petites pièces d'acrylique transparentes découpées au laser et dépolie au papier de verre afin de les rendre diffusantes.
+
+
+[[File:rfm_polissage.JPG|700px|Photo: polissage du diffusant pour les leds]]
+''Polissage du diffusant pour les leds''
+
+
+[[File:rfm_montage_boitier.JPG|700px|Photo: Montage du boitier]]
+''Montage du boîtier''
+
+
+Les composants (leds, ampli, batteries) sont fixés au boitier à l'aide d'un pistolet à colle.
+
+
+[[File:rfm_boitier_colle.JPG|700px|Photo: Collage en place des composants]]
+''Collage des composants dans le boitier''
+
+
+[[File:rfm_boitier_interieur.JPG|700px|Photo: intégration des composants]]
+''Intégration des composants''
+
+
+Après quelques tests, on se rend compte que le signal audio est fortement perturbé. Toutes les liaisons électroniques sont alors recouvertes de papier aluminium. Ce qui semble efficace.
+
+
+[[File:rfm_boitier_aluminium.jpg|700px]]
+''Ajout de papier aluminium''
+
+
+[[File:rfm_boitier_test.JPG|700px|Premiers tests]]
+''Premiers tests''
+
+
+==Conclusion et pistes pour la suite==
+
+Rappelons les trois principaux chantiers entrepris lors du Fabrikarium :
+* conception et fabrication d'un boitier de machine à lire basé sur un raspberry pi.
+* amélioration du projet PiTextReader
+* portage d'OCRScan sur raspberry pi avec l'utilisation d'une caméra au lieu d'un scanner.
+
+Le projet a avancé sur de nombreux points, cela dans une ambiance conviviale nourrie d'échanges très enrichissants pour chaque membre de l'équipe. Nous avons beaucoup appris lors de ce Fabrikarium.
+
+Sur le plan technique cependant, il y a un sentiment d'inachevé : si nous avons bien produit un prototype qui marche, il ne prend pas en charge toutes les fonctions qui ont été développées en parallèle les unes des autres.
+
+
+===Conception du boîtier===
+
+Certains aspects de la conception du boitier n'ont pas été traités :
+* Intégration des encodeurs et des boutons poussoirs,
+* Connectique entre l'extérieur et l'intérieur du boitier (par exemple pour charger la batterie),
+* Ouverture du boitier pour la maintenance.
+
+
+Pour la conception du boitier nous pourrions également améliorer :
+* l'intégration des composants, qui sont pour l'instant fixés au pistolet à colle.
+* la robustesse des articulations lorsque le dispositif est ouvert.
+
+
+===Logiciel===
+
+Avec le même boitier, les deux versions de la partie logicielle peuvent être utilisées. Ils leur manque cependant des fonctionnalités à chacune :
+* La version de PiTextReader est fonctionnelle (c'est elle qui a été utilisée lors de la présentation) mais ne permet pas de gérer la vitesse ou le volume de lecture
+* La version d'OCRScan n'a pas été testée dans le nouveau boitier et elle n'est pas tout à fait fonctionnelle en l'état.
+
+L'architecture logicielle du prototype basé sur OCRScan rend l'intégration de ses deux composantes (OCRScan et Main.py) compliquée. Par exemple, le script principal <tt>Main.py</tt> appelle le script bash <tt>OCRScan</tt> qui appelle lui-même des scripts en python dans d'autres versions de python... Il peut être judicieux de passer toute la logique dans le script principal.
+
+Une bonne partie des fonctionnalités compliquées à installer et à faire fonctionner d'OCRScan (autofocus et redressement de l'image) ne sont pas nécessaires pour une machine à lire statique. On pourrait imaginer que ces composants soient facultatifs et activables sous forme d'option, ce qui simplifierait l'installation du logiciel.
+
+
+==Notes diverses==
+
+
+===Présentation finale===
+
+Merci à Leyla pour la réalisation de la bande dessinée qui a servi de support à la présantation finale du Fabrikarium.
+
+
+[[File:rrm_presentation.JPG|700px|Photo: Leyla en train de préparer la présentation]]
+
+===La piste easyocr===
+
+Une piste intéressante qui a été explorée par Baptiste est l'utilisation d'OCRisation utilisant le machine learning [https://github.com/JaidedAI/EasyOCR EasyOCR]. Le résultat était convainquant sur un ordinateur portable. Il est probable que le temps de traitement soit un peu long sur un raspberry pi, mais nous n'avons pas pu le tester car il manquait des bibliothèques logiciels pour Raspbian.
+
+L'utilisation d'une plateforme dédié à ce type de traitement (par exemple la carte Jetson Nano) permet néanmoins d'envisager d'explorer cette piste pour une version portable.
+
+===Contrôle d'orca===
+
+Pour contrôler le lecteur d'écran orca, on utilise l'émulation d'événement clavier à partir de l'utilitaire xdotool
+
+; KP_Add : play
+; Ctrl : pause
+; KP_Down : reculer d'un mot
+; KP_Up : avancer d'un mot
+; Ins+Maj+KP_PageUp : augmenter le volume
+; Ins+Maj+KP_PageDown : diminuer le volume
+; Ins+Ctrl+KP_PageUp : augmenter le débit
+; Ins+Ctrl+KP_PageDown : diminuer le débit
+
+
+[[Category:Projets]]
+[[Category:En cours]]
+
+</div>
