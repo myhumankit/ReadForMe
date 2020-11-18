@@ -12,7 +12,7 @@ try:
 except:
     sys.exit(0)
 
-AUTOFOCUS = False
+AUTOFOCUS = True
 
 def focusing(val):
     value = (val << 4) & 0x3ff0
