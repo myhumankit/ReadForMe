@@ -526,6 +526,17 @@ coût estimé: 10€
 
 ==Fichiers source==
 
+Le dépot git [https://github.com/myhumankit/ReadForMe ReadForMe] contient :
+* les sources logicielles pour la variante d'OCRScan développée pendant le fabrikarium
+* les tracés des pièce découpées au laser au format svg (dossier <code>modeles</code>)
+* les modèles 3d des pièces imprimées, au format step, stl et FreeCAD (dossier <code>modeles</code>)
+* les sources svg des dessins et diagrammes réalisés pour cette documentation (dossier <code>documentation/dessin</code>)
+* les photos et images utilisés dans cette page (dossier <code>documentation/image</code>)
+* le contenu de cette page au format mediawiki (dossier <code>documentation</code>)
+
+Lien direct vers les fichiers pour la découpe laser :
+* Fichier de découpe du boîtier : [[:File:RFM_decoupe_boitier.svg]]
+* Fichier de gravure du logo du boitier : [[:File:RFM_logo_ReadForMe.bmp]]
 
 ==Étape de fabrication pas à pas==
 
@@ -707,3 +718,4 @@ Pour contrôler le lecteur d'écran orca, on utilise l'émulation d'événement 
 [[Category:En cours]]
 
 </div>
+
